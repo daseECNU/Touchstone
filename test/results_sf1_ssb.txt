@@ -1,0 +1,162 @@
+
+## #id, value index, sdf#
+
+Query 1.1:
+select count(*) from dwdate where d_year = #0,0,0#;
+365
+
+select count(*) from lineorder, dwdate where lo_orderdate = d_datekey and d_year = #0,0,0#;
+908288
+
+select count(*) from lineorder, dwdate where lo_orderdate = d_datekey and d_year = #0,0,0# and lo_discount between #1,0,0# and #1,1,0# and lo_quantity < #2,0,0#;
+119142
+
+Query 1.2:
+select count(*) from dwdate where d_yearmonthnum = #3,0,0#;
+31
+
+select count(*) from lineorder, dwdate where lo_orderdate = d_datekey and d_yearmonthnum = #3,0,0#;
+78532
+
+select count(*) from lineorder, dwdate where lo_orderdate = d_datekey and d_yearmonthnum = #3,0,0# and lo_discount between #4,0,0# and #4,1,0# and lo_quantity between #5,0,0# and #5,1,0#;
+4287
+
+Query 1.3:
+select count(*) from dwdate where d_weeknuminyear = #7,0,0# and d_year = #6,0,0#;
+7
+
+select count(*) from lineorder, dwdate where lo_orderdate = d_datekey and d_weeknuminyear = #7,0,0# and d_year = #6,0,0#;
+17317
+
+select count(*) from lineorder, dwdate where lo_orderdate = d_datekey and d_weeknuminyear = #7,0,0# and d_year = #6,0,0# and lo_discount between #8,0,0# and #8,1,0# and lo_quantity between #9,0,0# and #9,1,0#;
+909
+
+
+Query 2.1:
+select count(*) from supplier where s_region = '#10,0,0#';
+378
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_region = '#10,0,0#';
+1134371
+
+select count(*) from lineorder, dwdate, part, supplier where lo_orderdate = d_datekey and lo_partkey = p_partkey and lo_suppkey = s_suppkey and p_category = '#11,0,0#' and s_region = '#10,0,0#';
+44575
+
+Query 2.2:
+select count(*) from supplier where s_region = '#12,0,0#';
+449
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_region = '#12,0,0#';
+1347130
+
+select count(*) from lineorder, dwdate, part, supplier where lo_orderdate = d_datekey and lo_partkey = p_partkey and lo_suppkey = s_suppkey and p_brand1 = '#13,0,0#' and s_region = '#12,0,0#';
+10542
+
+Query 2.3:
+select count(*) from supplier where s_region = '#14,0,0#';
+380
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_region = '#14,0,0#';
+1140311
+
+select count(*) from lineorder, dwdate, part, supplier where lo_orderdate = d_datekey and lo_partkey = p_partkey and lo_suppkey = s_suppkey and p_brand1 = '#15,0,0#' and s_region = '#14,0,0#';
+1094
+
+
+Query 3.1:
+select count(*) from supplier where s_region = '#12,0,0#';
+449
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_region = '#12,0,0#';
+1347130
+
+select count(*) from lineorder, supplier, dwdate where lo_suppkey = s_suppkey and lo_orderdate = d_datekey and s_region = '#12,0,0#' and d_year between #16,0,0# and #16,1,0#;
+1226959
+
+select count(*) as revenue from customer, lineorder, supplier, dwdate where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_orderdate = d_datekey and c_region = '#17,0,0#' and s_region = '#12,0,0#' and d_year between #16,0,0# and #16,1,0#;
+246764
+
+Query 3.2:
+select count(*) from supplier where s_nation = '#18,0,0#';
+76
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_nation = '#18,0,0#';
+228595
+
+select count(*) from lineorder, supplier, dwdate where lo_suppkey = s_suppkey and lo_orderdate = d_datekey and s_nation = '#18,0,0#' and d_year between #19,0,0# and #19,1,0#;
+208374
+
+select count(*) from customer, lineorder, supplier, dwdate where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_orderdate = d_datekey and c_nation = '#20,0,0#' and s_nation = '#18,0,0#' and d_year between #19,0,0# and #19,1,0#;
+8597
+
+Query 3.3:
+select count(*) from supplier where (s_city='#21,0,0#' or s_city='#22,0,0#');
+19
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and (s_city='#21,0,0#' or s_city='#22,0,0#');
+56901
+
+select count(*) from lineorder, supplier, dwdate where lo_suppkey = s_suppkey and lo_orderdate = d_datekey and (s_city='#21,0,0#' or s_city='#22,0,0#') and d_year between #23,0,0# and #23,1,0#;
+51893
+
+select count(*) from customer, lineorder, supplier, dwdate where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_orderdate = d_datekey and (c_city='#24,0,0#' or c_city='#25,0,0#') and (s_city='#21,0,0#' or s_city='#22,0,0#') and d_year between #23,0,0# and #23,1,0#;
+437
+
+Query 3.4:
+select count(*) from supplier where (s_city='#21,0,0#' or s_city='#22,0,0#');
+19
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and (s_city='#21,0,0#' or s_city='#22,0,0#');
+56901
+
+select count(*) from lineorder, supplier, dwdate where lo_suppkey = s_suppkey and lo_orderdate = d_datekey and (s_city='#21,0,0#' or s_city='#22,0,0#') and d_yearmonth = '#26,0,0#';
+762
+
+select count(*) from customer, lineorder, supplier, dwdate where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_orderdate = d_datekey and (c_city='#27,0,0#' or c_city='#28,0,0#') and (s_city='#21,0,0#' or s_city='#22,0,0#') and d_yearmonth = '#26,0,0#';
+7
+
+
+Query 4.1:
+select count(*) from supplier where s_region = '#10,0,0#';
+378
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_region = '#10,0,0#';
+1134371
+
+select count(*) from dwdate, customer, supplier, lineorder where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_orderdate = d_datekey and c_region = '#29,0,0#' and s_region = '#10,0,0#';
+226191
+
+select count(*) from dwdate, customer, supplier, part, lineorder where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_partkey = p_partkey and lo_orderdate = d_datekey and c_region = '#29,0,0#' and s_region = '#10,0,0#' and (p_mfgr = '#30,0,0#' or p_mfgr = '#31,0,0#');
+90319
+
+Query 4.2:
+select count(*) from supplier where s_region = '#10,0,0#';
+378
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_region = '#10,0,0#';
+1134371
+
+select count(*) from dwdate, supplier, lineorder where lo_suppkey = s_suppkey and lo_orderdate = d_datekey and s_region = '#10,0,0#' and (d_year = #32,0,0# or d_year = #33,0,0#);
+272894
+
+select count(*) from dwdate, customer, supplier, lineorder where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_orderdate = d_datekey and c_region = '#34,0,0#' and s_region = '#10,0,0#' and (d_year = #32,0,0# or d_year = #33,0,0#);
+54796
+
+select count(*) from dwdate, customer, supplier, part, lineorder where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_partkey = p_partkey and lo_orderdate = d_datekey and c_region = '#34,0,0#' and s_region = '#10,0,0#' and (d_year = #32,0,0# or d_year = #33,0,0#) and (p_mfgr = '#35,0,0#' or p_mfgr = '#36,0,0#');
+21872
+
+Query 4.3:
+select count(*) from supplier where s_nation = '#18,0,0#';
+76
+
+select count(*) from lineorder, supplier where lo_suppkey = s_suppkey and s_nation = '#18,0,0#';
+228595
+
+select count(*) from dwdate, supplier, lineorder where lo_suppkey = s_suppkey and lo_orderdate = d_datekey and s_nation = '#18,0,0#' and (d_year = #37,0,0# or d_year = #38,0,0#);
+54887
+
+select count(*) from dwdate, customer, supplier, lineorder where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_orderdate = d_datekey and c_region = '#39,0,0#' and s_nation = '#18,0,0#' and (d_year = #37,0,0# or d_year = #38,0,0#);
+11002
+
+select count(*) from dwdate, customer, supplier, part, lineorder where lo_custkey = c_custkey and lo_suppkey = s_suppkey and lo_partkey = p_partkey and lo_orderdate = d_datekey and c_region = '#39,0,0#' and s_nation = '#18,0,0#' and (d_year = #37,0,0# or d_year = #38,0,0#) and p_category = '#40,0,0#';
+468

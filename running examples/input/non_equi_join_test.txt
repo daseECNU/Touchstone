@@ -1,0 +1,24 @@
+
+## attribute contains the prefix of the data table name
+## it is necessary to ensure that 'id' does not coincide with the automatically generated ids of basic filter operations
+## the 'probability' is the probability over the whole domain space
+## the 'id' in 'R' must appear after the 'id' in 'C'
+## the definition of child nodes should be precede the definition of parent node
+
+C[115, R.r_n1@>=, 0.1, 1E6]
+C[116, S.s_n1@>, 0.2, 1E6]
+C[117, T.t_n1@<, 0.3, 1E6]
+C[118, R.r_n1+S.s_n1+T.t_n1@<, 0.001, 1E18]
+R[118, 115]
+R[118, 116]
+R[118, 117]
+
+C[126, R.r_n1@bet, 0.4, 1E6]
+C[127, S.s_n1@>=, 0.2, 1E6]
+C[128, T.t_n1@>, 0.1, 1E6]
+C[129, R.r_n1+2*S.s_n1@<=, 0.003, 1E12]
+C[130, R.r_n1-4.5*T.t_n1@>=, 0.0001, 1E18]
+R[129, 126]
+R[129, 127]
+R[130, 128]
+R[130, 129]

@@ -1,0 +1,30 @@
+
+## query 2
+[region]; [0, r_name@=, 0.2]; [1, r_regionkey, 1, 2]
+[nation]; [2, n_regionkey, 0.2, region.r_regionkey, 1, 2]; [1, n_nationkey, 1, 2]
+[supplier]; [2, s_nationkey, 0.20033, nation.n_nationkey, 1, 2]; [1, s_suppkey, 1, 2]
+[part]; [0, p_size@=#p_type@like#and, 0.003927]; [1, p_partkey, 1, 2, 4, 8]
+[partsupp]; [2, ps_suppkey, 0.20033, supplier.s_suppkey, 1, 2]; [2, ps_partkey, 0.003962836, part.p_partkey, 1, 2]
+[partsupp]; [2, ps_partkey, 0.003927, part.p_partkey, 4, 8]
+[region]; [0, r_name@=, 0.4]
+##0.401236 -> 0.4
+
+## query 3
+[customer]; [0, c_mktsegment@=, 0.200184]; [1, c_custkey, 1, 2]
+[orders]; [2, o_custkey, 0.2002921, customer.c_custkey, 1, 2]; [0, o_orderdate@<, 0.48659691]; [1, o_orderkey, 1, 2]
+[lineitem]; [2, l_orderkey, 0.09744937, orders.o_orderkey, 1, 2]; [0, l_shipdate@>, 0.0516823]
+
+## query 6
+[lineitem]; [0, l_shipdate@bet#l_discount@bet#l_quantity@<#and, 0.01899215]
+
+## query 10
+[orders]; [0, o_orderdate@bet, 0.03821047]; [1, o_orderkey, 4096, 8192]
+[lineitem]; [2, l_orderkey, 0.0382243, orders.o_orderkey, 4096, 8192]; [0, l_returnflag@=, 0.50027127]
+
+## query 14
+[lineitem]; [0, l_shipdate@bet, 0.0124899535]
+
+## query 16
+[part]; [0, p_brand@<>#p_type@not like#p_size@in(8)#and, 0.148412]; [1, p_partkey, 64, 128]
+[supplier]; [0, s_comment@like, 0.00056]; [1, s_suppkey, 16, 32]
+[partsupp]; [2, ps_partkey, 0.148412, part.p_partkey, 64, 128]; [2, ps_suppkey, 0.999988, supplier.s_suppkey, 32, 16]

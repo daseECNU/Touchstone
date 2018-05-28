@@ -1,0 +1,209 @@
+
+## #id, value index, sdf#
+
+Query 1:
+select count(*) from lineitem where l_shipdate <= '#0,0,1#';
+5916591
+
+
+Query 2:
+select count(*) from region where r_name = '#1,0,0#';
+100###
+
+select count(*) from nation, region where n_regionkey = r_regionkey and r_name = '#1,0,0#';
+500###
+
+select count(*) from nation, region, supplier where n_regionkey = r_regionkey and s_nationkey = n_nationkey and r_name = '#1,0,0#';
+1987
+
+select count(*) from nation, region, supplier, partsupp where n_regionkey = r_regionkey and s_nationkey = n_nationkey and s_suppkey = ps_suppkey and r_name = '#1,0,0#';
+158960
+
+select count(*) from nation, region, supplier, partsupp, part where n_regionkey = r_regionkey and s_nationkey = n_nationkey and s_suppkey = ps_suppkey and p_partkey = ps_partkey and r_name = '#1,0,0#' and p_size = #2,0,0# and p_type like '%#3,0,0#%';
+642
+
+select count(*) from partsupp, (select p_partkey from nation, region, supplier, partsupp, part where n_regionkey = r_regionkey and s_nationkey = n_nationkey and s_suppkey = ps_suppkey and p_partkey = ps_partkey and r_name = '#1,0,0#' and p_size = #2,0,0# and p_type like '%#3,0,0#%') as tmp where ps_partkey = tmp.p_partkey;
+2568
+
+select count(*) from partsupp, supplier, nation, region, (select p_partkey from nation, region, supplier, partsupp, part where n_regionkey = r_regionkey and s_nationkey = n_nationkey and s_suppkey = ps_suppkey and p_partkey = ps_partkey and r_name = '#1,0,0#' and p_size = #2,0,0# and p_type like '%#3,0,0#%') as tmp where ps_partkey = tmp.p_partkey and s_suppkey = ps_suppkey and s_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = '#4,0,0#';
+1070
+
+
+Query 3:
+select count(*) from customer where c_mktsegment = '#5,0,0#';
+30142
+
+select count(*) from customer, orders where c_custkey = o_custkey and c_mktsegment = '#5,0,0#';
+303959
+
+select count(*) from customer, orders where c_custkey = o_custkey and c_mktsegment = '#5,0,0#' and o_orderdate < '#6,0,1#';
+147126
+
+select count(*) from customer, orders, lineitem where c_custkey = o_custkey and l_orderkey = o_orderkey and c_mktsegment = '#5,0,0#' and o_orderdate < '#6,0,1#';
+588507
+
+select count(*) from customer, orders, lineitem where c_custkey = o_custkey and l_orderkey = o_orderkey and c_mktsegment = '#5,0,0#' and o_orderdate < '#6,0,1#' and l_shipdate > '#7,0,1#';
+30519
+
+
+Query 4:
+select count(*) from orders where o_orderdate >= '#8,0,1#' and o_orderdate < '#8,1,1#';
+57218
+
+select count(*) from orders, lineitem where l_orderkey = o_orderkey and o_orderdate >= '#8,0,1#' and o_orderdate < '#8,1,1#';
+229691
+
+select count(*) from orders, lineitem where l_orderkey = o_orderkey and o_orderdate >= '#8,0,1#' and o_orderdate < '#8,1,1#' and l_commitdate < '#9,0,1#';
+144869
+
+
+Query 5:
+select count(*) from region where r_name = '#10,0,0#';
+100###
+
+select count(*) from region, nation where n_regionkey = r_regionkey and r_name = '#10,0,0#';
+500###
+
+select count(*) from region, nation, customer where c_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = '#10,0,0#';
+30183
+
+select count(*) from region, nation, customer, orders where c_custkey = o_custkey and c_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = '#10,0,0#';
+301740
+
+select count(*) from region, nation, customer, orders where c_custkey = o_custkey and c_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = '#10,0,0#' and o_orderdate >= '#11,0,1#' and o_orderdate < '#11,1,1#';
+46008
+
+select count(*) from region, nation, customer, orders, lineitem where l_orderkey = o_orderkey and c_custkey = o_custkey and c_nationkey = n_nationkey and n_regionkey = r_regionkey and r_name = '#10,0,0#' and o_orderdate >= '#11,0,1#' and o_orderdate < '#11,1,1#';
+184082
+
+
+Query 6:
+select count(*) from lineitem where l_shipdate >= '#12,0,1#' and l_shipdate < '#12,1,1#' and l_discount between #13,0,0# and #13,1,0# and l_quantity < #14,0,0#;
+114160
+
+
+Query 7:
+select count(*) from nation n2 where n2.n_name = '#15,0,0#';
+100###
+
+select count(*) from nation n2, customer where c_nationkey = n2.n_nationkey and n2.n_name = '#15,0,0#';
+5908
+
+select count(*) from nation n2, customer, orders where c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#15,0,0#';
+59724
+
+select count(*) from nation n2, customer, orders, lineitem where o_orderkey = l_orderkey and c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#15,0,0#';
+239064
+
+select count(*) from nation n2, customer, orders, lineitem where o_orderkey = l_orderkey and c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#15,0,0#' and l_shipdate between '#16,0,1#' and '#16,1,1#';
+72936
+
+select count(*) from nation n2, customer, orders, lineitem, supplier, nation n1 where s_nationkey = n1.n_nationkey and s_suppkey = l_suppkey and o_orderkey = l_orderkey and c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#15,0,0#' and l_shipdate between '#16,0,1#' and '#16,1,1#' and n1.n_name = '#17,0,0#';
+3014
+
+
+select count(*) from nation n2 where n2.n_name = '#18,0,0#';
+100###
+
+select count(*) from nation n2, customer where c_nationkey = n2.n_nationkey and n2.n_name = '#18,0,0#';
+6100
+
+select count(*) from nation n2, customer, orders where c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#18,0,0#';
+61600
+
+select count(*) from nation n2, customer, orders, lineitem where o_orderkey = l_orderkey and c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#18,0,0#';
+246415
+
+select count(*) from nation n2, customer, orders, lineitem where o_orderkey = l_orderkey and c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#18,0,0#' and l_shipdate between '#19,0,1#' and '#19,1,1#';
+75434
+
+select count(*) from nation n2, customer, orders, lineitem, supplier, nation n1 where s_nationkey = n1.n_nationkey and s_suppkey = l_suppkey and o_orderkey = l_orderkey and c_custkey = o_custkey and c_nationkey = n2.n_nationkey and n2.n_name = '#18,0,0#' and l_shipdate between '#19,0,1#' and '#19,1,1#' and n1.n_name = '#20,0,0#';
+2910
+
+
+Query 8:
+select count(*) from region where r_name = '#21,0,0#';
+100###
+
+select count(*) from region, nation n1 where n1.n_regionkey = r_regionkey and r_name = '#21,0,0#';
+500###
+
+select count(*) from region, nation n1, customer where c_nationkey = n1.n_nationkey and n1.n_regionkey = r_regionkey and r_name = '#21,0,0#';
+29952
+
+select count(*) from region, nation n1, customer, orders where o_custkey = c_custkey and c_nationkey = n1.n_nationkey and n1.n_regionkey = r_regionkey and r_name = '#21,0,0#';
+299103
+
+select count(*) from region, nation n1, customer, orders where o_custkey = c_custkey and c_nationkey = n1.n_nationkey and n1.n_regionkey = r_regionkey and r_name = '#21,0,0#' and o_orderdate between '#22,0,1#' and '#22,1,1#';
+91179
+
+select count(*) from region, nation n1, customer, orders, lineitem where l_orderkey = o_orderkey and o_custkey = c_custkey and c_nationkey = n1.n_nationkey and n1.n_regionkey = r_regionkey and r_name = '#21,0,0#' and o_orderdate between '#22,0,1#' and '#22,1,1#';
+365091
+
+select count(*) from region, nation n1, customer, orders, lineitem, supplier, nation n2, part where p_partkey = l_partkey and s_nationkey = n2.n_nationkey and s_suppkey = l_suppkey and l_orderkey = o_orderkey and o_custkey = c_custkey and c_nationkey = n1.n_nationkey and n1.n_regionkey = r_regionkey and r_name = '#21,0,0#' and o_orderdate between '#22,0,1#' and '#22,1,1#' and p_type = '#23,0,0#';
+2603
+
+
+Query 9:
+select count(*) from nation, supplier, partsupp, part where ps_partkey = p_partkey and s_nationkey = n_nationkey and s_suppkey = ps_suppkey and p_name like '%#24,0,0#%';
+42656
+
+select count(*) from nation, supplier, partsupp, part, lineitem where l_partkey = ps_partkey and l_suppkey = s_suppkey and ps_partkey = p_partkey and s_nationkey = n_nationkey and s_suppkey = ps_suppkey and p_name like '%#24,0,0#%';
+319404
+
+
+Query 10:
+select count(*) from nation, customer, orders where c_nationkey = n_nationkey and c_custkey = o_custkey and o_orderdate >= '#25,0,1#' and o_orderdate < '#25,1,1#';
+57069
+
+select count(*) from nation, customer, orders, lineitem where l_orderkey = o_orderkey and c_nationkey = n_nationkey and c_custkey = o_custkey and o_orderdate >= '#25,0,1#' and o_orderdate < '#25,1,1#';
+228772
+
+select count(*) from nation, customer, orders, lineitem where l_orderkey = o_orderkey and c_nationkey = n_nationkey and c_custkey = o_custkey and o_orderdate >= '#25,0,1#' and o_orderdate < '#25,1,1#' and l_returnflag = '#26,0,0#';
+114705
+
+
+Query 11:
+select count(*) from nation where n_name = '#27,0,0#';
+100###
+
+select count(*) from nation, supplier where s_nationkey = n_nationkey and n_name = '#27,0,0#';
+396
+
+select count(*) from nation, supplier, partsupp where ps_suppkey = s_suppkey and s_nationkey = n_nationkey and n_name = '#27,0,0#';
+31680
+
+
+Query 12:
+select count(*) from orders, lineitem where o_orderkey = l_orderkey and l_shipmode in ('#28,0,0#', '#28,1,0#') and l_commitdate < '#29,0,1#' and l_shipdate < '#30,0,1#' and l_receiptdate >= '#31,0,1#' and l_receiptdate < '#31,1,1#';
+30988
+
+
+Query 13:
+select count(*) from customer, orders where c_custkey = o_custkey and o_comment not like '%#32,0,0#%';
+1483918
+
+
+Query 14:
+select count(*) from part, lineitem where l_partkey = p_partkey and l_shipdate >= '#33,0,1#' and l_shipdate < '#33,1,1#';
+75983
+
+
+Query 15:
+select count(*) from lineitem where l_shipdate >= '#34,0,1#' and l_shipdate < '#34,1,1#';
+225954
+
+
+Query 16:
+select count(*) from part where p_brand <> '#35,0,0#' and p_type not like '%#36,0,0#%' and p_size in (#37,0,0#, #37,1,0#, #37,2,0#, #37,3,0#, #37,4,0#, #37,5,0#, #37,6,0#, #37,7,0#);
+29581
+
+select count(*) from part, partsupp where p_partkey = ps_partkey and p_brand <> '#35,0,0#' and p_type not like '%#36,0,0#%' and p_size in (#37,0,0#, #37,1,0#, #37,2,0#, #37,3,0#, #37,4,0#, #37,5,0#, #37,6,0#, #37,7,0#);
+118324
+
+select count(*) from supplier where s_comment like '%#38,0,0#%';
+4
+
+select count(*) from part, partsupp where p_partkey = ps_partkey and p_brand <> '#35,0,0#' and p_type not like '%#36,0,0#%' and p_size in (#37,0,0#, #37,1,0#, #37,2,0#, #37,3,0#, #37,4,0#, #37,5,0#, #37,6,0#, #37,7,0#) and ps_suppkey not in (select count(*) from supplier where s_comment like '%#38,0,0#%');
+118311
+

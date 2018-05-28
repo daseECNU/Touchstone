@@ -1,0 +1,55 @@
+
+## star schema benchmark (SSB)
+
+## query 1.1
+[dwdate]; [0, d_year@=, 0.142801]; [1, d_datekey, 1, 2]
+[lineorder]; [2, lo_orderdate, 0.151352, dwdate.d_datekey, 1, 2]; [0, lo_discount@bet#lo_quantity@<#and, 0.131172]
+
+## query 1.2
+[dwdate]; [0, d_yearmonthnum@=, 0.012128]; [1, d_datekey, 4, 8]
+[lineorder]; [2, lo_orderdate, 0.013086, dwdate.d_datekey, 4, 8]; [0, lo_discount@bet#lo_quantity@bet#and, 0.054589]
+
+## query 1.3
+[dwdate]; [0, d_year@=#d_weeknuminyear@=#and, 0.002739]; [1, d_datekey, 16, 32]
+[lineorder]; [2, lo_orderdate, 0.002886, dwdate.d_datekey, 16, 32]; [0, lo_discount@bet#lo_quantity@bet#and, 0.052492]
+
+
+## query 2.1
+[supplier]; [0, s_region@=, 0.189]; [1, s_suppkey, 1, 2]
+[lineorder]; [2, lo_suppkey, 0.189025, supplier.s_suppkey, 1, 2]
+[part]; [0, p_category@=, 0.039295]
+
+## query 2.2
+[supplier]; [0, s_region@=, 0.2245]; [1, s_suppkey, 4, 8]
+[lineorder]; [2, lo_suppkey, 0.224478, supplier.s_suppkey, 4, 8]
+## [part]; [0, p_brand1@bet, 0.007826]
+## p_brand1 varchar !!!
+[part]; [0, p_brand1@=, 0.007826]
+
+## query 2.3
+[supplier]; [0, s_region@=, 0.19]; [1, s_suppkey, 16, 32]
+[lineorder]; [2, lo_suppkey, 0.190015, supplier.s_suppkey, 16, 32]
+[part]; [0, p_brand1@=, 0.000959]
+
+
+## query 3.1 (query 2.2)
+[dwdate]; [0, d_year@bet, 0.910795]
+[customer]; [0, c_region@=, 0.201118]
+
+## query 3.2
+[supplier]; [0, s_nation@=, 0.038]; [1, s_suppkey, 64, 128]
+[lineorder]; [2, lo_suppkey, 0.038092, supplier.s_suppkey, 64, 128]
+## ---
+[dwdate]; [0, d_year@bet, 0.911542]
+[customer]; [0, c_nation@=, 0.041258]
+
+## query 3.3
+[supplier]; [0, s_city@=#s_city@=#or, 0.0095]; [1, s_suppkey, 256, 512]
+[lineorder]; [2, lo_suppkey, 0.009482, supplier.s_suppkey, 256, 512]
+## ---
+[dwdate]; [0, d_year@bet, 0.911987]
+[customer]; [0, c_city@=#c_city@=#or, 0.008421]
+
+## query 3.4 (query 3.3)
+[dwdate]; [0, d_yearmonth@=, 0.0133917]
+[customer]; [0, c_city@=#c_city@=#or, 0.009186]

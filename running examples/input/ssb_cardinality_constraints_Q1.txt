@@ -1,0 +1,15 @@
+
+## star schema benchmark (SSB)
+
+## query 1.1
+[dwdate]; [0, d_year@=, 0.142801]; [1, d_datekey, 1, 2]
+[lineorder]; [2, lo_orderdate, 0.151352, dwdate.d_datekey, 1, 2]; [0, lo_discount@bet#lo_quantity@<#and, 0.131172]
+
+## query 1.2
+[dwdate]; [0, d_yearmonthnum@=, 0.012128]; [1, d_datekey, 4, 8]
+[lineorder]; [2, lo_orderdate, 0.013086, dwdate.d_datekey, 4, 8]; [0, lo_discount@bet#lo_quantity@bet#and, 0.054589]
+
+## query 1.3
+[dwdate]; [0, d_year@=#d_weeknuminyear@=#and, 0.002739]; [1, d_datekey, 16, 32]
+[lineorder]; [2, lo_orderdate, 0.002886, dwdate.d_datekey, 16, 32]; [0, lo_discount@bet#lo_quantity@bet#and, 0.052492]
+

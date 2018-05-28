@@ -1,0 +1,11 @@
+
+T[R; 5000014; R_key, Integer; R_c1, Integer; R_c2, real; r_c3, decimal; rc4, datetIme; r__c5, bool; c6, date; c7, varchar; P(R_key)]
+D[R.R_c1; 0.1; 10000; -100; 100000]
+D[R.R_c2; 0.05; 0; 200000]
+D[R.r_c3; 0; 0; 900000]
+D[R.rc4; 0; 1999-03-15-12:02:01; 1999-09-15-12:02:01]
+D[R.r__c5; 0.1; 0.7]
+D[R.c6; 0; 1999-11-15; 2015-06-25]
+D[R.c7; 0.08; 12; 100]
+
+T[S; 12054870; s_key, Integer; fk, InTEGER; s_c1, Integer; sss2, real; ss_c3, decimal; ssc4, date; s__c5, varchar; c6, datetime; c7, bool; P(s_key); F(fk, R.R_KEY)]

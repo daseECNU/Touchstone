@@ -1,0 +1,14 @@
+
+## query 1
+[lineitem]; [0, l_shipdate@<=, 0.98593935]
+
+## query 2
+[region]; [0, r_name@=, 0.2]; [1, r_regionkey, 1, 2]
+[nation]; [2, n_regionkey, 0.2, region.r_regionkey, 1, 2]; [1, n_nationkey, 1, 2]
+[supplier]; [2, s_nationkey, 0.20033, nation.n_nationkey, 1, 2]; [1, s_suppkey, 1, 2]
+[part]; [0, p_size@=#p_type@like#and, 0.003927]; [1, p_partkey, 1, 2, 4, 8]
+[partsupp]; [2, ps_suppkey, 0.20033, supplier.s_suppkey, 1, 2]; [2, ps_partkey, 0.003962836, part.p_partkey, 1, 2]
+[partsupp]; [2, ps_partkey, 0.003927, part.p_partkey, 4, 8]
+[region]; [0, r_name@=, 0.4]
+##0.401236 -> 0.4
+

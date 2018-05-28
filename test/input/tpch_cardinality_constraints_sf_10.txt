@@ -1,0 +1,86 @@
+
+## query 1
+[lineitem]; [0, l_shipdate@<=, 0.98593935]
+
+## query 2
+[region]; [0, r_name@=, 0.2]; [1, r_regionkey, 1, 2]
+[nation]; [2, n_regionkey, 0.2, region.r_regionkey, 1, 2]; [1, n_nationkey, 1, 2]
+[supplier]; [2, s_nationkey, 0.20033, nation.n_nationkey, 1, 2]; [1, s_suppkey, 1, 2]
+[part]; [0, p_size@=#p_type@like#and, 0.003927]; [1, p_partkey, 1, 2, 4, 8]
+[partsupp]; [2, ps_suppkey, 0.20033, supplier.s_suppkey, 1, 2]; [2, ps_partkey, 0.003962836, part.p_partkey, 1, 2]
+[partsupp]; [2, ps_partkey, 0.003927, part.p_partkey, 4, 8]
+[region]; [0, r_name@=, 0.4]
+##0.401236 -> 0.4
+
+## query 3
+[customer]; [0, c_mktsegment@=, 0.200184]; [1, c_custkey, 1, 2]
+[orders]; [2, o_custkey, 0.2002921, customer.c_custkey, 1, 2]; [0, o_orderdate@<, 0.48659691]; [1, o_orderkey, 1, 2]
+[lineitem]; [2, l_orderkey, 0.09744937, orders.o_orderkey, 1, 2]; [0, l_shipdate@>, 0.0516823]
+
+## query 4
+[orders]; [0, o_orderdate@bet, 0.0382447]; [1, o_orderkey, 4, 8]
+[lineitem]; [2, l_orderkey, 0.0382565, orders.o_orderkey, 4, 8]; [0, l_commitdate@<, 0.63209674]
+## l_commitdate - l_receiptdate -> l_commitdate
+
+## query 5
+[region]; [0, r_name@=, 0.2]; [1, r_regionkey, 4, 8]
+[nation]; [2, n_regionkey, 0.2, region.r_regionkey, 4, 8]; [1, n_nationkey, 4, 8]
+[customer]; [2, c_nationkey, 0.20018, nation.n_nationkey, 4, 8]; [1, c_custkey, 4, 8]
+[orders]; [2, o_custkey, 0.2004253, customer.c_custkey, 4, 8]; [0, o_orderdate@bet, 0.151934]; [1, o_orderkey, 16, 32]
+[lineitem]; [2, l_orderkey, 0.030438, orders.o_orderkey, 16, 32];
+
+## query 6
+[lineitem]; [0, l_shipdate@bet#l_discount@bet#l_quantity@<#and, 0.01899215]
+
+## query 7
+[nation]; [0, n_name@=, 0.04]; [1, n_nationkey, 16, 32]
+[customer]; [2, c_nationkey, 0.040102, nation.n_nationkey, 16, 32]; [1, c_custkey, 16, 32]
+[orders]; [2, o_custkey, 0.04010433, customer.c_custkey, 16, 32]; [1, o_orderkey, 64, 128]
+[lineitem]; [2, l_orderkey, 0.04012843, orders.o_orderkey, 64, 128]; [0, l_shipdate@bet, 0.30420132]
+[nation]; [0, n_name@=, 0.03931953];
+[nation]; [0, n_name@=, 0.04]; [1, n_nationkey, 64, 128]
+[customer]; [2, c_nationkey, 0.040211, nation.n_nationkey, 64, 128]; [1, c_custkey, 64, 128]
+[orders]; [2, o_custkey, 0.0402829, customer.c_custkey, 64, 128]; [1, o_orderkey, 256, 512]
+[lineitem]; [2, l_orderkey, 0.04020955, orders.o_orderkey, 256, 512]; [0, l_shipdate@bet, 0.303279]
+[nation]; [0, n_name@=, 0.04042717];
+
+## query 8
+[region]; [0, r_name@=, 0.2]; [1, r_regionkey, 16, 32]
+[nation]; [2, n_regionkey, 0.2, region.r_regionkey, 16, 32]; [1, n_nationkey, 256, 512]
+[customer]; [2, c_nationkey, 0.199624, nation.n_nationkey, 256, 512]; [1, c_custkey, 256, 512]
+[orders]; [2, o_custkey, 0.19947793, customer.c_custkey, 256, 512]; [0, o_orderdate@bet, 0.30424752]; [1, o_orderkey, 1024, 2048]
+[lineitem]; [2, l_orderkey, 0.06066292, orders.o_orderkey, 1024, 2048]
+[part]; [0, p_type@=, 0.006665148]
+
+## query 9
+[part]; [0, p_name@like, 0.054391]; [1, p_partkey, 16, 32]
+[partsupp]; [2, ps_partkey, 0.054391, part.p_partkey, 16, 32]; [1, ps_partkey#ps_suppkey, 1, 2]
+[lineitem]; [2, l_partkey#l_suppkey, 0.05437286, partsupp.ps_partkey#partsupp.ps_suppkey, 1, 2]
+
+
+## query 10
+[orders]; [0, o_orderdate@bet, 0.03821047]; [1, o_orderkey, 4096, 8192]
+[lineitem]; [2, l_orderkey, 0.0382243, orders.o_orderkey, 4096, 8192]; [0, l_returnflag@=, 0.50027127]
+
+## query 11
+[nation]; [0, n_name@=, 0.04]; [1, n_nationkey, 1024, 2048]
+[supplier]; [2, s_nationkey, 0.04049, nation.n_nationkey, 1024, 2048]; [1, s_suppkey, 4, 8]
+[partsupp]; [2, ps_suppkey, 0.04049, supplier.s_suppkey, 4, 8]
+
+## query 12
+[lineitem]; [0, l_shipmode@in(2)#l_commitdate@<#l_shipdate@<#l_receiptdate@bet#and, 0.00518125447]
+## l_commitdate - l_receiptdate -> l_commitdate; l_shipdate - l_commitdate -> l_shipdate
+
+## query 13
+[orders]; [0, o_comment@like, 0.0108278]
+
+## query 14
+[lineitem]; [0, l_shipdate@bet, 0.0124899535]
+
+## query 15
+[lineitem]; [0, l_shipdate@bet, 0.03777068]
+
+## query 16
+[part]; [0, p_brand@<>#p_type@not like#p_size@in(8)#and, 0.148412]; [1, p_partkey, 64, 128]
+[supplier]; [0, s_comment@like, 0.00056]; [1, s_suppkey, 16, 32]
+[partsupp]; [2, ps_partkey, 0.148412, part.p_partkey, 64, 128]; [2, ps_suppkey, 0.999988, supplier.s_suppkey, 32, 16]
