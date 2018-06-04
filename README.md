@@ -3,7 +3,7 @@
 
 **Touchstone是华东师范大学数据科学与工程学院（DaSE@ECNU）研发的面向应用负载的数据生成器。该工作已被USENIX Annual Technical Conference 2018 (ATC'2018) 录取。**
 
-论文题目：Touchstone: Generating Enormous Query-Aware Test Databases。
+论文信息：Yuming Li, Rong Zhang, Xiaoyan Yang, Zhenjie Zhang, Aoying Zhou, "Touchstone: Generating Enormous Query-Aware Test Databases", to appear in USENIX ATC 2018.
 
 会议论文请参照"research paper - touchstone.pdf"，技术报告请参照"technical report - touchstone.pdf"。我们在技术报告中给出了论文算法的详细描述和分析，并补充了更多的实验内容。
 
