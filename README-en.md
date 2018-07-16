@@ -1,5 +1,5 @@
 
-<font size=5><div align="right"><a href="https://github.com/daseECNU/Touchstone/README.md">中文 版本</a></div>
+<font size=5><div align="right"><a href="https://github.com/daseECNU/Touchstone/blob/master/README.md">中文 版本</a></div>
 </font>
 
 ### Introduction to Touchstone
