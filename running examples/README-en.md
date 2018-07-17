@@ -21,10 +21,10 @@ In the configuration file ("XXX.conf" in the execution command), the user needs 
 
 \#\# configurations of servers
 
-IPs of servers: 10.11.1.190; 10.11.1.191; 10.11.1.192
-password of root user: w@ngl5i
-user names of servers: touchstone; touchstone; touchstone
-passwords of servers: 123456; 123456; 123456
+IPs of servers: 10.11.1.190; 10.11.1.191; 10.11.1.192  
+password of root user: w@ngl5i  
+user names of servers: touchstone; touchstone; touchstone  
+passwords of servers: 123456; 123456; 123456  
 
 \#\# The above is the configuration of the cluster for deploying Touchstone (currently only supporting Linux system & Java 8+). There are three nodes configured here, the IPs are 10.11.1.190, 10.11.1.191 and 10.11.1.192. The root password of all nodes is 'w@ngl5i' (using it to clear the cache of operating system). Currently, Touchstone clears the operating system cache of all nodes by default before running, ensuring that the JVM GC does not be triggered due to insufficient memory. If you can't get the root password, you can ignore it. And Touchstone has a austere memory consumption which usually less than 5GB. Note that the command "java -jar Touchstone.jar XXX.conf" can be run on a Windows or Linux system, but the system (node) must be network connected to the cluster configured above.
 
@@ -66,18 +66,19 @@ thread numbers of data generators: 2; 2; 2; 2; 2; 2
 running directories of data generators: ~//icde_test//dg1; ~//icde_test//dg2; ~//icde_test//dg3; ~//icde_test//dg1; ~//icde_test//dg2; ~//icde_test//dg3  
 data output path: .//data  
 
+
 \#\# The above is the configuration of Touchstone data generators. And all data generators are automatically deployed by the program. Since the performance of starting multiple data generation threads in one JVM is often lower than starting the same number of data generation threads in multiple JVMs, it is recommended to start multiple JVMs on a node based on the CPU core number. The above example configuration launches 3 JVMs on each node and 2 data generation threads in each JVM. All run directories are created automatically by the program and do not need to be created manually.
 
 
 \#\# running parameters
 
-thread numbers of query instantiation: 2
-maximum iterations of query instantiation: 20
-global relative error of query instantiation: 0.0001
-maximum iterations of parameter instantiation: 20
-relative error of parameter instantiation: 0.0001
-maximum number of shuffle: 1000
-maximum size of PKVs: 10000
+thread numbers of query instantiation: 2  
+maximum iterations of query instantiation: 20  
+global relative error of query instantiation: 0.0001  
+maximum iterations of parameter instantiation: 20  
+relative error of parameter instantiation: 0.0001  
+maximum number of shuffle: 1000  
+maximum size of PKVs: 10000  
 
 \#\# The above is the configuration of parameters used in algorithms of Touchstone, and the details (related meanings) can be viewed in the paper.
 
