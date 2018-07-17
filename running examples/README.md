@@ -1,3 +1,5 @@
+<font size=5><div align="right"><a href="https://github.com/daseECNU/Touchstone/blob/master/running%20examples/README-en.md">English Version</a></div>
+</font>
 
 ### 运行示例
 
@@ -5,12 +7,12 @@
 
 **运行命令：java -jar Touchstone.jar XXX.conf**
 
-是不是超级简单，hahaha......
+**非常简单！**
 
 
 ### 配置文件说明
 
-在配置文件（上面命令中的"XXX.conf"）中，用户需要对部署的集群信息、Touchstone的controller、Touchstone的data generators、待生成数据库schema和目标测试Query的基数约束、以及运行时的一些算法参数等信息进行配置。下面通过一个示例配置文件进行说明。
+在配置文件（执行命令中的"XXX.conf"）中，用户需要对部署Touchstone的集群信息、Touchstone的controller、Touchstone的data generators、待生成数据库的schema、目标测试Query上的基数约束（即负载特征）、以及一些算法参数等信息进行配置。下面通过一个示例配置文件进行说明。
 
 #### 示例配置文件：
 
@@ -23,7 +25,7 @@ password of root user: w@ngl5i
 user names of servers: touchstone; touchstone; touchstone  
 passwords of servers: 123456; 123456; 123456  
 
-\#\# 上面是对Touchstone部署的集群信息进行了配置（目前仅支持Linux系统 & Java 8+）。这里配置了三个节点，IP分别是10.11.1.190，10.11.1.191，10.11.1.192。所有节点的root密码是w@ngl5i（为了清空操作系统缓存），目前程序在运行前一般默认会清空所有节点的操作系统缓存，确保程序在运行过程中不会因为内存不足而出现JVM GC。Touchstone对内存要求并不高，实际占用内存一般不超过1GB。注意：运行命令"java -jar Touchstone.jar XXX.conf"可在Windows或Linux系统中运行，但所在节点必须与上面配置的节点网络连通。
+\#\# 上面是对部署Touchstone的集群信息进行了配置（目前仅支持Linux系统 & Java 8+）。这里配置了三个节点，IP分别是10.11.1.190，10.11.1.191，10.11.1.192。所有节点的root密码是w@ngl5i（为了清空操作系统缓存），目前程序在运行前一般默认会清空所有节点的操作系统缓存，确保程序在运行过程中不会因为内存不足而出现JVM GC（若拿不到root密码，这里可不配置）。Touchstone对内存要求并不高，实际占用内存一般不超过5GB。注意：运行命令"java -jar Touchstone.jar XXX.conf"可在Windows或Linux系统中运行，但所在节点必须与上面配置的部署节点网络连通。
 
 \#\# configurations of controller
 
@@ -31,14 +33,14 @@ IP of controller: 10.11.1.190
 port of controller: 32100  
 running directory of controller: ~//icde_test  
 
-\#\# 上面配置了Touchstone controller的部署节点（自动部署），controller端口号为32100，controller与data generators利用netty网络框架进行通信（发送数据生成任务和Join Information Table）。
+\#\# 上面配置了Touchstone controller的部署节点（程序自动部署），controller的端口号为32100，controller与data generators利用netty网络框架进行通信（发送数据生成任务和Join Information Table）。
 
 \#\# input files
 
 database schema: .//input//tpch_schema_sf_1.txt  
 cardinality constraints: .//input//tpch_cardinality_constraints_sf_1.txt  
 
-\#\# 上面配置了待生成数据库的schema和目标测试Query的基数约束，具体形式请参照input文件夹中的示例文件。
+\#\# 上面配置了待生成数据库的schema和目标测试Query上的基数约束，具体形式请参照input文件夹中的示例文件，在input文件夹中我们也给出了输入数据格式的详细介绍。
 
 \#\# configuration of log4j
 
@@ -58,7 +60,7 @@ thread numbers of data generators: 2; 2; 2; 2; 2; 2
 running directories of data generators: ~//icde_test//dg1; ~//icde_test//dg2; ~//icde_test//dg3; ~//icde_test//dg1; ~//icde_test//dg2; ~//icde_test//dg3  
 data output path: .//data  
 
-\#\# 上面配置了Touchstone data generators的部署节点（自动部署）。由于一个JVM中启动多个数据生成线程的性能往往没有多个JVM中启动相同数量数据生成线程的性能好，所以建议在一个节点上根据CPU物理核数启动多个JVM。上面的示例配置在每个物理节点上启动了3个JVM，每个JVM中启动了2个数据生成线程。所有运行目录会自动创建，无需人工手动创建。
+\#\# 上面配置了部署Touchstone data generators的节点信息（程序自动部署）。由于一个JVM中启动多个数据生成线程的性能往往没有多个JVM中启动相同数量数据生成线程的性能好，所以建议在一个节点上根据CPU物理核数启动多个JVM。上面的示例配置在每个物理节点上启动了3个JVM，每个JVM中启动了2个数据生成线程。所有运行目录会自动创建，无需人工创建。
 
 \#\# running parameters
 
@@ -77,17 +79,6 @@ maximum size of PKVs: 10000
 
 ### 其他注意事项
 
-（1）不要对running examples文件夹下的input & lib文件夹进行重命名！当前打包jar中这两个文件夹名称是写死的，你要是真想改，请稍微改动下我们的源码并重新打包。  
-（2）如果你拿不到root密码，那么请在我们的程序中注释掉清操作系统缓存的那行代码。  
-（3）放心，我们的root密码已经不是w@ngl5i了，我不会那么没有保密意识的。  
-（4）...... 还没想到，等想到了再加吧  
+（1）不要对running examples文件夹下的input & lib文件夹进行重命名！当前打包的jar中这两个文件夹名称是写死的，你要是真想改，请稍微改动下我们的源码并重新打包。    
 
-### Database schema & cardinality constraints
-
-待生成数据库的schema和目标测试Query的基数约束：针对TPC-H和Star Schema Benchmark，我们给出了论文实验中的部分输入（当前目录下的input文件夹中），具体请参照示例文件。
-
-约束链中三类约束的基本数据结构如下：  
-Filter node: [0, exp1@op1#exp2@op2 ... #and|or, probability]  
-FKJoin node: [2, fk1#fk2 ..., probability, pk1#pk2 ..., num1, num2]  
-PKJoin node: [1, pk1#pk2 ..., num1, num2, ...]  
-// num1 is the identifier that can join, num2 is the identifier that can not join  
+（2）实例化的查询参数都写在了Touchstone controller的日志中，你可在日志文件中搜索"Final instantiated parameters"进行定位，这里的参数顺序与输入基数约束中的符号参数顺序相同。
