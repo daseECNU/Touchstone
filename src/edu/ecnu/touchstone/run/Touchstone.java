@@ -18,13 +18,23 @@ public class Touchstone {
 			}
 
 			// clear the cache of memory
+			boolean rootPasswdError = false;
 			for (int i = 0; i < configurations.getIps().size(); i++) {
-				RemoteShell.exec(
-						configurations.getIps().get(i), "root", configurations.getRootPassword(), 
-						"sync; sync; sync; echo 3 > /proc/sys/vm/drop_caches \n " + 
-						"echo 0 > /proc/sys/vm/drop_caches");
+				try {
+					RemoteShell.exec(
+							configurations.getIps().get(i), "root", configurations.getRootPassword(), 
+							"sync; sync; sync; echo 3 > /proc/sys/vm/drop_caches \n " + 
+							"echo 0 > /proc/sys/vm/drop_caches");
+				} catch (Exception e) {
+					rootPasswdError = true;
+					break;
+				}
 			}
-			System.out.println("Clear the cache of memory for all servers!");
+			if (!rootPasswdError) {
+				System.out.println("Clear the cache of memory for all servers!");
+			} else {
+				System.out.println("The password of root user is ERROR! Continue to generate data ...");
+			}
 
 			// kill all Java processes
 			// clear and make all running directories
