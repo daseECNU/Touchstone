@@ -13,7 +13,7 @@
 在[running examples](https://github.com/daseECNU/Touchstone/tree/master/running%20examples)文件夹中，包含3个可执行文件，分别是Touchstone.jar，RunController.jar和RunController.jar。其中Touchstone.jar负责在集群中自动化部署运行环境并启动生成任务，RunController.jar和RunDataGenenrator.jar负责在集群中执行数据生成任务，概要说明如下：
 
 1. Touchstone.jar，部署和启动程序。程序运行时会根据配置内容，将执行文件和配置文件拷贝到集群的运行节点中，拷贝完成后启动对应节点上的程序执行生成任务。
-2. RunController.jar，由Touchstone.jar在部署之后自动启动，只有一个节点运行该程序，是集群的管理节点，负责管理负载生成任务的中各个RunDataGenenrator.jar生成任务，通过netty网络框架进行通信（发送数据生成任务和Join Information Table）。
+2. RunController.jar，由Touchstone.jar在部署之后自动启动，只有一个节点运行该程序，是集群的管理节点，负责管理负载生成任务的中各个RunDataGenenrator.jar，通过netty网络框架进行通信（发送数据生成任务和Join Information Table）。
 3. RunDataGenenrator.jar，由Touchstone.jar在部署之后自动启动，可以运行在多个集群节点中，分布式并行执行数据生成任务，由集群中的RunController.jar程序文件分配运行时信息。
 
 ### 配置文件概述
@@ -22,8 +22,9 @@
 + 集群配置文件样例为[touchstone.conf](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/touchstone.conf)，配置集群运行时需要的节点，并发度，运行路径等信息
 + 负载生成任务配置文件包含两个配置文件，分别为
    + Table信息（样例为[tpch_schema_sf_1](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_schema_sf_1.txt)），描述了待生成的表数据需要满足的基本数据格式，包括Schema信息和表数据的基本分布
-   + 负载语句信息（样例为[tpch_cardinality_constraints_sf_1.txt](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_cardinality_constraints_sf_1.txt)），描述了需要测试的SQL语句的特征，每个中间结果集的大小和过滤比例等特征
-   下面在集群环境配置文件和负载生成任务配置文件两个章节中对相关配置参数做了具体说明。说明配置文件格式之后，在章节集群标准配置文件样例中，我们给出了TPC-H和SSB的配置样例以供参考。
+   + 负载语句信息（样例为[tpch_cardinality_constraints_sf_1.txt](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_cardinality_constraints_sf_1.txt)），描述了需要测试的SQL语句的构造，每个中间结果集的过滤比例等特征
+   
+在后续的集群环境配置文件和负载生成任务配置文件两个章节中，我们对相关配置参数做了具体说明。说明配置文件格式之后，我们给出了TPC-H和SSB的配置样例以供参考。
 
 ### 运行方式
 
@@ -36,7 +37,7 @@ java -jar Touchstone.jar XXX.conf
 
 ### 运行结果
 
-+ **实例化的查询参数**：生成于Touchstone controller的日志中，在日志文件中搜索"Final instantiated parameters"进行定位，这里的参数顺序与输入基数约束中的符号参数顺序相同。
++ **实例化的查询参数**：生成于Touchstone controller的日志中，在日志文件中搜索"Final instantiated parameters"进行定位，参数顺序与输入基数约束中的符号参数顺序相同。
 + **生成的表数据文件**：生成于data generator配置的路径中。
 
 
@@ -47,7 +48,7 @@ java -jar Touchstone.jar XXX.conf
 
 1. Touchstone.jar的配置文件
 
-   由于该程序文件需要拷贝运行文件到集群中，并且需要启动集群任务，因此需要配置集群节点的IP，用户名和密码，配置项为IPs of servers，user names of servers和passwords of servers，每个节点的配置顺序需要保持一致。程序在运行时默认会清空所有节点的操作系统缓存，确保程序在运行过程中不会因为内存不足而出现JVM GC，若没有内存不足的情况可以不配置root密码，样例配置文件如下。
+   由于该程序文件需要拷贝运行文件到集群中，并且需要启动集群任务，因此需要配置集群节点的IP，用户名和密码，配置项为IPs of servers，user names of servers和passwords of servers，每个节点的配置顺序需要保持一致。程序在运行时默认会清空所有节点的操作系统缓存，确保程序在运行过程中不会因为内存不足而出现JVM GC。若没有内存不足的情况，可以不配置root密码。样例配置文件如下。
 
    ```yaml
    ## configurations of servers
@@ -60,7 +61,7 @@ java -jar Touchstone.jar XXX.conf
 
 2. RunController.jar的配置文件
 
-   对于该程序文件，需要配置在集群中用作controller的节点ip和程序运行的文件路径，以及和dataGenerator交互时的ip端口号。例如下面的配置项，配置controller的运行节点为10.11.1.190，端口号为32100，执行文件路径为~//icde_test
+   对于该程序文件，需要配置在集群中用作controller节点的ip，在该节点的文件路径（TouchStone.jar会将相关文件复制到该文件路径），以及该节点对外发送信息的端口号。例如下面的配置项，配置controller的运行节点为10.11.1.190，端口号为32100，执行文件路径为~//icde_test
 
    ```yaml
    ## configurations of controller
@@ -70,7 +71,7 @@ java -jar Touchstone.jar XXX.conf
    running directory of controller: ~//icde_test
    ```
 
-   在controller运行时，需要加载数据生成任务的配置文件，包括待生成数据库的schema和目标测试Query上的基数约束，这两项配置文件的具体形式将在下面做出具体介绍，配置controller的配置文件输入项如下：
+   在controller运行时，需要加载数据生成任务的配置文件，包括待生成数据库Table信息和负载特征（约束链中的基数约束），这两项配置文件的具体形式将在下面做出具体介绍，配置controller的配置文件输入项如下：
 
    ```yaml
    ## input files
