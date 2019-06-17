@@ -24,6 +24,7 @@
    + Table信息（样例为[tpch_schema_sf_1](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_schema_sf_1.txt)），描述了待生成的表数据需要满足的基本数据格式，包括Schema信息和表数据的基本分布
    + 负载语句信息（样例为[tpch_cardinality_constraints_sf_1.txt](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_cardinality_constraints_sf_1.txt)），描述了需要测试的SQL语句的构造，每个中间结果集的过滤比例等特征
    
+
 在后续的集群环境配置文件和负载生成任务配置文件两个章节中，我们对相关配置参数做了具体说明。说明配置文件格式之后，我们给出了TPC-H和SSB的配置样例以供参考。
 
 ### 运行方式
@@ -127,13 +128,19 @@ java -jar Touchstone.jar XXX.conf
    ```yaml
    ## running parameters
    
-   thread numbers of query instantiation: 2
-   maximum iterations of query instantiation: 20
-   global relative error of query instantiation: 0.0001
-   maximum iterations of parameter instantiation: 20
-   relative error of parameter instantiation: 0.0001
-   maximum number of shuffle: 1000
-   maximum size of PKVs: 10000
+   # controller在计算 query instantiation的控制参数
+   thread numbers of query instantiation: 2  #计算线程数
+   maximum iterations of query instantiation: 20 #迭代次数
+   global relative error of query instantiation: 0.0001 #全局逼近误差
+   maximum iterations of parameter instantiation: 20 #参数的最大迭代次数
+   relative error of parameter instantiation: 0.0001 #单个参数的逼近误差
+   
+   
+   # 计算约束规则的最大的shuffle次数，见技术报告的算法3
+   maximum number of shuffle: 1000 
+   
+   #Jointable中每个status最多的主键数量，即压缩算法中的L
+   maximum size of PKVs: 10000 
    ```
 
 
@@ -233,6 +240,7 @@ Touchstone有两个输入数据文件，分别包含了数据库Schema信息（�
    
    <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g3zap9kpbzj30d408naal.jpg" width="240" height="155" />
    
+
 对应的约束链为：
 
 ```
