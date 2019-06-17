@@ -1,6 +1,6 @@
 #  Touchstone—Github版本使用说明
 
-> **编撰人：李宇明，王清帅**
+> **编撰人：王清帅，李宇明 **
 >
 > **单位：华东师范大学 数据科学与工程学院**
 
@@ -18,7 +18,12 @@
 
 ### 配置文件概述
 
-集群启动前需要编写集群配置文件和负载生成任务的配置文件。前者配置集群运行时需要的节点，并发度，运行路径等信息，后者包含生成Table的Schema信息和负载语句信息两个主要配置文件，下面在配置集群运行文件和配置负载生成任务两个章节对相关配置参数做了具体说明。说明配置文件格式之后，在章节集群标准配置文件样例中，我们给出了TPC-H和SSB的配置样例以供参考。
+集群启动前需要编写集群环境配置文件和负载生成任务配置文件。
++ 集群配置文件样例为[touchstone.conf](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/touchstone.conf)，配置集群运行时需要的节点，并发度，运行路径等信息
++ 负载生成任务配置文件包含两个配置文件，分别为
+   + Table信息（样例为[tpch_schema_sf_1](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_schema_sf_1.txt)），描述了生成的表数据需要满足的基本数据格式，包括Schema信息和表数据的基本分布
+   + 负载语句信息（样例为[tpch_cardinality_constraints_sf_1.txt](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_cardinality_constraints_sf_1.txt)），描述了需要测试的SQL语句的特征，每个中间结果集的大小和过滤比例等特征
+   下面在集群环境配置文件和负载生成任务配置文件两个章节中对相关配置参数做了具体说明。说明配置文件格式之后，在章节集群标准配置文件样例中，我们给出了TPC-H和SSB的配置样例以供参考。
 
 ### 运行方式
 
@@ -27,15 +32,16 @@ Touchstone的启动程序是Touchstone.jar，在编写完成配置文件之后�
 ```shell
 java -jar Touchstone.jar XXX.conf
 ```
+启动后，Touchstone.jar会将所需文件分配给集群中的相应节点，并启动集群生成任务。集群生成任务启动后，controller会计算Query的参数填充信息，计算完成后，分配信息给集群中的DataGenerator节点，进行数据生成，直至生成任务结束。
 
 ### 运行结果
 
-+ 实例化的查询参数写在了Touchstone controller的日志中，在日志文件中搜索"Final instantiated parameters"进行定位，这里的参数顺序与输入基数约束中的符号参数顺序相同。
-+ 生成的表数据文件在data generator配置的生成路径下。
++ **实例化的查询参数**：生成于Touchstone controller的日志中，在日志文件中搜索"Final instantiated parameters"进行定位，这里的参数顺序与输入基数约束中的符号参数顺序相同。
++ **生成的表数据文件**：生成于data generator配置的路径中。
 
 
 
-## 配置集群运行文件
+## 集群环境配置文件
 
 **注意：** 所有集群配置文件需要编写在一个文件中，样例如running examples文件夹下的[touchstone.conf](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/touchstone.conf)
 
@@ -131,12 +137,12 @@ java -jar Touchstone.jar XXX.conf
 
 
 
-## 配置负载生成任务
+## 负载生成任务配置文件
 
 Touchstone有两个输入数据文件，分别包含了数据库Schema信息（含数据特征信息）和基数约束信息。
 
 
-### 数据库Schema信息
+### 数据库Table信息
 
 1. Schema信息
 
@@ -313,22 +319,29 @@ Touchstone有两个输入数据文件，分别包含了数据库Schema信息（�
 + 使用查询计划的顺序逐步执行子语句得知每一步的数据集
 
   ```mysql
-  select count(*) from customer;																	#150000
-  select count(*) from customer where c_mktsegment = 'BUILDING';	#30142
-  select count(*) from orders;																		#1500000
+  select count(*) from customer;#150000
+  
+  select count(*) from customer where c_mktsegment = 'BUILDING';#30142
+  
+  select count(*) from orders;#1500000
+  
   select count(*) from customer,orders 
-  where c_mktsegment = 'BUILDING' and c_custkey = o_custkey;			#303959
+  where c_mktsegment = 'BUILDING' and c_custkey = o_custkey;#303959
+  
   select count(*) from customer,orders 
   where c_mktsegment = 'BUILDING' and c_custkey = o_custkey
-  and ;o_orderdate < date '1995-03-15'														#147126
-  select count(*) from lineitem																		#6001215
+  and ;o_orderdate < date '1995-03-15'#147126
+  
+  select count(*) from lineitem;#6001215
+  
   select count(*) from customer, orders, lineitem
   where c_mktsegment = 'BUILDING' and c_custkey = o_custkey
-  and l_orderkey = o_orderkey and o_orderdate < date '1995-03-15'	#588507
+  and l_orderkey = o_orderkey and o_orderdate < date '1995-03-15'#588507
+  
   select count(*) from customer, orders, lineitem
   where c_mktsegment = 'BUILDING' and c_custkey = o_custkey
   and l_orderkey = o_orderkey and o_orderdate < date '1995-03-15'
-  and l_shipdate > date '1995-03-15'															#30519
+  and l_shipdate > date '1995-03-15'#30519
   ```
 
 + 结合数据集大小，查询计划可以可到如下的query tree，通过query tree便可以生成约束链的配置文件。
