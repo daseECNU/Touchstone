@@ -262,10 +262,6 @@ Touchstone有两个输入数据文件，分别包含了数据库Schema信息（�
 
 所有基数约束中的probability要么是选择率，要么是连接率，都是根据实际查询树中的中间结果集大小计算而来的。
 
-
-
-
-
 >  **关于编码的解释：**
 >
 > 当customer表的某个tuple满足了"c\_mktsegment = p7"选择操作，那么这个tuple的主键c\_custkey就可能与接下来的orders表连接上，对于这样的c\_custkey我们就给它打上标签"1"；对于那些不符合"c\_mktsegment = p7"选择操作的c\_custkey就打上标签"2"以标示其肯定与后面的orders表连接不上。编码都是2^n，目前由输入保证，其实可以由程序自动生成这些编码，而不需要人工输入，后续会提供额外工具实现。
@@ -273,6 +269,71 @@ Touchstone有两个输入数据文件，分别包含了数据库Schema信息（�
 > **为什么编码是2^n呢？**
 >
 > 因为需要用当前tuple的主键在所有约束链上的编码之和来表示其连接状态（相当于有n个位，每两个位对应一个连接操作，并且这两个位中只能有一个为1，以标示这个主键是否可以连接上）！
+
+## 如何将SQL语句转换为约束链配置文件的输入
+
+在本小节将以TPC-H的Query3为例，详细说明如何从已有数据集上，将Query转化为约束链。
+
++ 首先用工具，在MySQL上生成SF=1的TPC-H样库，然后初始化Query3 语句为：
+
+  ```mysql
+  select
+          l_orderkey,
+          sum(l_extendedprice * (1 - l_discount)) as revenue,
+          o_orderdate,
+          o_shippriority
+  from
+          customer,
+          orders,
+          lineitem
+  where
+          c_mktsegment = 'BUILDING'
+          and c_custkey = o_custkey
+          and l_orderkey = o_orderkey
+          and o_orderdate < date '1995-03-15'
+          and l_shipdate > date '1995-03-15'
+  group by
+          l_orderkey,
+          o_orderdate,
+          o_shippriority
+  order by
+          revenue desc,
+          o_orderdate;
+  limit 10;
+  ```
+
++ 使用exlpain+query显示MySQL查询计划，可以看到Join顺序为cutomer->orders->lineitem。
+
+  | id | select_type | table    | partitions | type | possible_keys      | key        | key_len | ref                     | rows   | filtered | Extra|
+  | ---- | ------ | -------- | ---- | ---- | ------- | ---- | ---- | ---- | ---- | ---- | ---- |
+  |  1 | SIMPLE      | customer | NULL       | ALL  | PRIMARY            | NULL       | NULL    | NULL                    | 147408 |    10.00 | Using where; Using temporary; Using filesort |
+  |  1 | SIMPLE      | orders   | NULL       | ref  | PRIMARY,ORDERS_FK1 | ORDERS_FK1 | 4       | tpch.customer.C_CUSTKEY |     15 |    33.33 | Using where       |
+  |  1 | SIMPLE      | lineitem | NULL       | ref  | PRIMARY            | PRIMARY    | 4       | tpch.orders.O_ORDERKEY  |      4 |    33.33 | Using where                                  |
+
++ 使用查询计划的顺序逐步执行子语句得知每一步的数据集
+
+  ```mysql
+  select count(*) from customer;																	#150000
+  select count(*) from customer where c_mktsegment = 'BUILDING';	#30142
+  select count(*) from orders;																		#1500000
+  select count(*) from customer,orders 
+  where c_mktsegment = 'BUILDING' and c_custkey = o_custkey;			#303959
+  select count(*) from customer,orders 
+  where c_mktsegment = 'BUILDING' and c_custkey = o_custkey
+  and ;o_orderdate < date '1995-03-15'														#147126
+  select count(*) from lineitem																		#6001215
+  select count(*) from customer, orders, lineitem
+  where c_mktsegment = 'BUILDING' and c_custkey = o_custkey
+  and l_orderkey = o_orderkey and o_orderdate < date '1995-03-15'	#588507
+  select count(*) from customer, orders, lineitem
+  where c_mktsegment = 'BUILDING' and c_custkey = o_custkey
+  and l_orderkey = o_orderkey and o_orderdate < date '1995-03-15'
+  and l_shipdate > date '1995-03-15'															#30519
+  ```
+
++ 结合数据集大小，查询计划可以可到如下的query tree，通过query tree便可以生成约束链的配置文件。
+
+![TPC-H_Query-3](http://ww2.sinaimg.cn/large/006tNc79ly1g3zaqvbz1pj30d40cv0t3.jpg)
 
 ## 集群标准配置文件样例
 
