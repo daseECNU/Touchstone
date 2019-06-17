@@ -1,6 +1,6 @@
 #  Touchstone—Github版本使用说明
 
-> **编撰人：王清帅，李宇明 **
+> **编撰人：王清帅，李宇明**
 >
 > **单位：华东师范大学 数据科学与工程学院**
 
@@ -21,7 +21,7 @@
 集群启动前需要编写集群环境配置文件和负载生成任务配置文件。
 + 集群配置文件样例为[touchstone.conf](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/touchstone.conf)，配置集群运行时需要的节点，并发度，运行路径等信息
 + 负载生成任务配置文件包含两个配置文件，分别为
-   + Table信息（样例为[tpch_schema_sf_1](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_schema_sf_1.txt)），描述了生成的表数据需要满足的基本数据格式，包括Schema信息和表数据的基本分布
+   + Table信息（样例为[tpch_schema_sf_1](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_schema_sf_1.txt)），描述了待生成的表数据需要满足的基本数据格式，包括Schema信息和表数据的基本分布
    + 负载语句信息（样例为[tpch_cardinality_constraints_sf_1.txt](https://github.com/daseECNU/Touchstone/blob/master/running%20examples/input/tpch_cardinality_constraints_sf_1.txt)），描述了需要测试的SQL语句的特征，每个中间结果集的大小和过滤比例等特征
    下面在集群环境配置文件和负载生成任务配置文件两个章节中对相关配置参数做了具体说明。说明配置文件格式之后，在章节集群标准配置文件样例中，我们给出了TPC-H和SSB的配置样例以供参考。
 
@@ -229,9 +229,9 @@ Touchstone有两个输入数据文件，分别包含了数据库Schema信息（�
 下面会根据TPC-H的一些几个Query示例输入来介绍输入数据的具体格式。
 
 1. TPC-H的Query 1在MySQL上的物理查询树
-
-   ![TPC-H_Query-1](http://ww3.sinaimg.cn/large/006tNc79ly1g3zap9kpbzj30d408naal.jpg)
-
+   
+   <img src="http://ww3.sinaimg.cn/large/006tNc79ly1g3zap9kpbzj30d408naal.jpg" width="240" height="155" />
+   
 对应的约束链为：
 
 ```
@@ -254,7 +254,7 @@ Touchstone有两个输入数据文件，分别包含了数据库Schema信息（�
 
 ```
 [customer]; [0, c_mktsegment@=, 0.20095]; [1, c_custkey, 1, 2] 
-[orders]; [2, o_custkey, 0.20264, customer.c\_custkey, 1, 2]; [0, o_orderdate@<, 0.48403]; [1, o_orderkey, 1, 2] 
+[orders]; [2, o_custkey, 0.20264, customer.c_custkey, 1, 2]; [0, o_orderdate@<, 0.48403]; [1, o_orderkey, 1, 2] 
 [lineitem]; [2, l_orderkey, 0.09806464, orders.o_orderkey, 1, 2]; [0, l_shipdate@>, 0.05185835]
 ```
 
