@@ -54,6 +54,6 @@ Touchstone的输入包含：待生成数据库的Schema，所有属性的数据�
 
 邮政编码：200062。
 
-联系邮箱：liyuming@stu.ecnu.edu.cn。
+联系邮箱：qswang@stu.ecnu.edu.cn
 
 对于文档内容和实现源码有任何疑问，可通过邮件与我们联系，我们收到后将尽快给您反馈。
